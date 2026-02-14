@@ -71,6 +71,56 @@ class PostedJobController extends Controller
         ]);
     }
 
+    /* ================= ALL JOBS ================= */
+    public function allJobs()
+    {
+        $jobs = PostedJob::with('recruiter')
+            ->withCount('applications')
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $jobs,
+        ]);
+    }
+
+    /* ================= ALL JOBS ================= */
+    public function openJobs()
+    {
+        $jobs = PostedJob::with('recruiter')
+            ->withCount('applications') // 👈 this adds applications_count
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $jobs,
+        ]);
+    }
+
+    /* ================= JOB APPLICANTS ================= */
+
+    public function jobApplicants($jobId)
+    {
+        $job = PostedJob::with(['applications'])
+            ->withCount('applications')
+            ->find($jobId);
+
+        if (! $job) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Job not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'job'     => $job,
+
+        ]);
+    }
+
     /* ================= UPDATE ================= */
 
     public function update(Request $request, $id)

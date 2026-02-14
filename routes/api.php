@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\OtpAuthController;
 use App\Http\Controllers\PostedJobController;
 use App\Http\Controllers\RecruiterController;
@@ -41,6 +42,12 @@ Route::prefix('admin-dashboard')->group(function () {
     Route::get('recruiter-deleted', [RecruiterController::class, 'deletedRecruiters']);
     Route::post('recruiter-recovery/{id}', [RecruiterController::class, 'restore']);
 
+    // all jobs
+    Route::get('all-jobs', [PostedJobController::class, 'allJobs']);
+
+    Route::get('/applications', [JobApplicationController::class, 'index']);
+    Route::get('/applications/{id}', [JobApplicationController::class, 'show']);
+    Route::get('/jobs/{id}/applicants', [PostedJobController::class, 'jobApplicants']);
 });
 
 Route::prefix('recruiter-dashboard')->middleware(['api', 'jwt.auth'])->group(function () {
@@ -49,5 +56,15 @@ Route::prefix('recruiter-dashboard')->middleware(['api', 'jwt.auth'])->group(fun
     Route::get('recruiter/my-jobs', [PostedJobController::class, 'myJobs']);
     Route::put('recruiter/post-job/{id}', [PostedJobController::class, 'update']);
     Route::delete('recruiter/post-job/{id}', [PostedJobController::class, 'destroy']);
+
+    Route::get('/applications', [JobApplicationController::class, 'index']);
+    Route::get('/applications/{id}', [JobApplicationController::class, 'show']);
+
+});
+
+Route::prefix('landing')->group(function () {
+
+    Route::get('all-jobs', [PostedJobController::class, 'openJobs']);
+    Route::post('/apply-job', [JobApplicationController::class, 'store']); // Public
 
 });

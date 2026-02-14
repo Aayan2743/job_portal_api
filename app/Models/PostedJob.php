@@ -34,4 +34,9 @@ class PostedJob extends Model
     {
         return $this->belongsTo(User::class, 'recruiter_id');
     }
+
+    public function applications()
+    {
+        return $this->hasMany(JobApplication::class, 'postedjob_id');
+    }
 }
