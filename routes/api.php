@@ -1,11 +1,15 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\OtpAuthController;
 use App\Http\Controllers\PostedJobController;
 use App\Http\Controllers\RecruiterController;
+use App\Http\Controllers\RecruiterDashboardController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('admin/dashboard', [DashboardController::class, 'index']);
 
 Route::prefix('auth')->group(function () {
 
@@ -59,6 +63,8 @@ Route::prefix('recruiter-dashboard')->middleware(['api', 'jwt.auth'])->group(fun
 
     Route::get('/applications', [JobApplicationController::class, 'index']);
     Route::get('/applications/{id}', [JobApplicationController::class, 'show']);
+
+    Route::get('/', [RecruiterDashboardController::class, 'index']);
 
 });
 

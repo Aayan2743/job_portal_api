@@ -14,6 +14,7 @@ class JobApplication extends Model
         'years_of_experience',
         'resume',
         'cover_letter',
+        'status',
     ];
 
     public function job()
