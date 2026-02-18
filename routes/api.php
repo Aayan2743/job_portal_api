@@ -63,6 +63,7 @@ Route::prefix('recruiter-dashboard')->middleware(['api', 'jwt.auth'])->group(fun
 
     Route::get('/applications', [JobApplicationController::class, 'index']);
     Route::get('/applications/{id}', [JobApplicationController::class, 'show']);
+    Route::post('/update-job-status/{id}', [RecruiterController::class, 'updateStatus']);
 
     Route::get('/', [RecruiterDashboardController::class, 'index']);
 

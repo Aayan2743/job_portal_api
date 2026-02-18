@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\JobApplication;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -23,7 +24,7 @@ class RecruiterController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors'  => $validator->errors(),
+                'errors'  => $validator->errors()->first(),
             ], 422);
         }
 
@@ -149,7 +150,7 @@ class RecruiterController extends Controller
             ->where('role', 'recruiter')
             ->get();
 
-        return response()->json([
+    return response()->json([
             'success' => true,
             'data'    => $recruiters,
         ]);
@@ -174,6 +175,44 @@ class RecruiterController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Recruiter restored successfully',
+        ]);
+    }
+
+    // /* ================= CHANGE STATUS AS SELECTED / REJECTED / ONHOLD ================= */
+
+    public function updateStatus(Request $request, $id)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|in:pending,selected,rejected,onhold',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors'  => $validator->errors()->first(),
+            ], 422);
+        }
+
+        $application = JobApplication::find($id);
+
+        if (! $application) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Application not found',
+            ], 404);
+        }
+
+        $application->status = $request->status;
+        $application->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status updated successfully',
+            'data'    => [
+                'id'     => $application->id,
+                'status' => $application->status,
+            ],
         ]);
     }
 }

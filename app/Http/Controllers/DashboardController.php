@@ -38,8 +38,8 @@ class DashboardController extends Controller
             ->get()
             ->map(function ($application) {
                 return [
-                    'candidate_name' => $application->user->name ?? '',
-                    'job_title'      => $application->job->title ?? '',
+                    'candidate_name' => $application->full_name ?? '',
+                    'job_title'      => $application->job->job_title ?? '',
                     'status'         => $application->status,
                     'applied_at'     => $application->created_at->format('Y-m-d H:i:s'),
                 ];
